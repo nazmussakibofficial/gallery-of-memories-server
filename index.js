@@ -16,7 +16,8 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         const serviceCollection = client.db('GoM').collection('services');
-
+        const commentCollection = client.db('GoM').collection('comments');
+        //services
         app.get('/home', async (req, res) => {
             const query = {};
             const cursor = serviceCollection.find(query);
@@ -31,11 +32,53 @@ async function run() {
             res.send(services);
         })
 
+        app.post('/services', async (req, res) => {
+            const service = req.body;
+            const result = await serviceCollection.insertOne(service);
+            res.send(result);
+        })
+
         app.get('/services/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const service = await serviceCollection.findOne(query);
             res.send(service);
+        })
+
+        //comments
+        app.get('/comments', async (req, res) => {
+            let query = {};
+            if (req.query.email) {
+                query = {
+                    email: req.query.email
+                }
+            }
+            const cursor = commentCollection.find(query);
+            const comments = await cursor.toArray();
+            res.send(comments);
+        })
+
+        app.post('/comments', async (req, res) => {
+            const comment = req.body;
+            const result = await commentCollection.insertOne(comment);
+            res.send(result);
+        })
+
+        app.get('/comments/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { service: id };
+            const cursor = commentCollection.find(query)
+            const comments = await cursor.toArray();
+            res.send(comments);
+        })
+
+        // app.patch()
+
+        app.delete('/comments/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await commentCollection.deleteOne(query);
+            res.send(result);
         })
 
     }
