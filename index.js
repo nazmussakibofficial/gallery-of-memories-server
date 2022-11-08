@@ -72,7 +72,18 @@ async function run() {
             res.send(comments);
         })
 
-        // app.patch()
+        app.patch('/comemnts/:id', async (req, res) => {
+            const id = req.params.id;
+            const details = req.body.details;
+            const query = { _id: ObjectId(id) }
+            const updatedDoc = {
+                $set: {
+                    details: details
+                }
+            }
+            const result = await commentCollection.updateOne(query, updatedDoc);
+            res.send(result);
+        })
 
         app.delete('/comments/:id', async (req, res) => {
             const id = req.params.id;
