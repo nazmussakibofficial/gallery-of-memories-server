@@ -53,21 +53,21 @@ async function run() {
                     email: req.query.email
                 }
             }
-            const cursor = commentCollection.find(query);
+            const cursor = commentCollection.find(query).sort({ "date": -1 });
             const comments = await cursor.toArray();
             res.send(comments);
         })
 
         app.post('/comments', async (req, res) => {
-            const comment = req.body;
-            const result = await commentCollection.insertOne(comment);
+            const { service, serviceName, price, customer, email, photo, comment } = req.body;
+            const result = await commentCollection.insertOne({ service, serviceName, price, customer, email, photo, comment, date: new Date() });
             res.send(result);
         })
 
         app.get('/comments/:id', async (req, res) => {
             const id = req.params.id;
             const query = { service: id };
-            const cursor = commentCollection.find(query)
+            const cursor = commentCollection.find(query).sort({ "date": -1 })
             const comments = await cursor.toArray();
             res.send(comments);
         })
