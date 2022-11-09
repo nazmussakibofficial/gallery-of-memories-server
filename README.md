@@ -1,8 +1,8 @@
-# Programoholic Project
+# Gallery of Memories Project
 
 ## Server Deployment
 
-[Live site](https://programoholic-server.vercel.app/)
+[Live site](https://gallery-of-memories-server.vercel.app/)
 
 ## Frameworks/libraries used:
 
